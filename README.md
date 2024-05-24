@@ -21,6 +21,7 @@ pip install comfy-cli
 comfy model download --url https://comfy-dl.vercel.app/sd_xl_refiner_1.0.safetensors
 \`\`\`
 
+## Note: curretly only support hugginface.co
 
 ## Further with comfy-cli
 
