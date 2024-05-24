@@ -1,7 +1,6 @@
 import DIE from "@snomiao/die";
 import { google } from "googleapis";
 
-
 // 'ckpt_name'
 // 'model_name'
 
@@ -20,12 +19,10 @@ import { google } from "googleapis";
 // to
 // https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/blob/main/sd_xl_refiner_1.0.safetensors
 
-
 export async function getHugginfaceDownloadLink(
   model_file_name: string,
   hint?: string
 ) {
-  const q = [JSON.stringify(model_file_name), hint].join(" ").trim();
   const result = await google.customsearch("v1").cse.list({
     key:
       process.env.GOOGLE_SEARCH_API_KEY!.toString() ??
@@ -37,9 +34,8 @@ export async function getHugginfaceDownloadLink(
     exactTerms: model_file_name,
     siteSearch: "https://huggingface.co",
     siteSearchFilter: "i",
-    // start: 11,
   });
-  
+
   const links = result.data.items
     ?.map((e) => e.link)
     .flatMap((e) => (e ? [e] : []));
