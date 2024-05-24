@@ -1,9 +1,8 @@
 import DIE from "@snomiao/die";
 import { google } from "googleapis";
 
-// 'ckpt_name'
-// 'model_name'
-
+// example: 
+// 
 // const q = "model_name sd_xl_base_1.0.safetensors";
 // const q2 = "ckpt_name sd_xl_base_1.0.safetensors";
 // Prompt outputs failed validation
@@ -13,11 +12,6 @@ import { google } from "googleapis";
 // - Value not in list: ckpt_name: 'sd_xl_base_1.0.safetensors' not in ['v1-5-pruned-emaonly.ckpt']
 // UpscaleModelLoader:
 // - Value not in list: model_name: 'Interpolations\4x-UltraMix_Smooth.pth' not in []
-
-// convert from
-// https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors?download=true
-// to
-// https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/blob/main/sd_xl_refiner_1.0.safetensors
 
 export async function getHugginfaceDownloadLink(
   model_file_name: string,
@@ -34,18 +28,18 @@ export async function getHugginfaceDownloadLink(
     siteSearch: "https://huggingface.co",
     siteSearchFilter: "i",
   });
-
-  const links = result.data.items
-    ?.map((e) => e.link)
-    .flatMap((e) => (e ? [e] : []));
-
-  const downloadLink = links
-    ?.filter((e) => e.endsWith(model_file_name))
+  const items = result.data.items || DIE("MODEL SEARCH FAILED");
+  const links = items.map((e) => e.link).flatMap((e) => (e ? [e] : []));
+  // convert from
+  // https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/blob/main/sd_xl_refiner_1.0.safetensors
+  // to
+  // https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors?download=true
+  const downloadLinks = links
+    .filter((e) => e.endsWith(model_file_name))
     .map((e) => e.replace("/blob/", "/resolve/"))
     .filter((e) => e.match("/huggingface.co/") && e.match("/resolve/"))
-    .map((e) => e + "?download=true")[0];
-  if (!downloadLink) {
-    console.log("Download link not found ", { model_file_name, hint, links });
-  }
-  return downloadLink;
+    .map((e) => e + "?download=true");
+  if (!downloadLinks.length)
+    console.log("WARN: Not found", { model_file_name, hint, links });
+  return downloadLinks;
 }
