@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { getHugginfaceDownloadLink } from "./getHugginfaceDownloadLink";
+import { getHugginfaceDownloadLink } from "./next/app/[filename]/getHugginfaceDownloadLink";
 
 // test
 if (import.meta.main) {

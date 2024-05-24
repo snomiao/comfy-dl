@@ -25,10 +25,9 @@ export async function getHugginfaceDownloadLink(
 ) {
   const result = await google.customsearch("v1").cse.list({
     key:
-      process.env.GOOGLE_SEARCH_API_KEY!.toString() ??
-      DIE("Missing GOOGLE_SEARCH_API_KEY"),
+      process.env.GOOGLE_SEARCH_API_KEY ?? DIE("Missing GOOGLE_SEARCH_API_KEY"),
     cx:
-      process.env.GOOGLE_SEARCH_ENGINE_ID!.toString() ??
+      process.env.GOOGLE_SEARCH_ENGINE_ID ??
       DIE("Missing GOOGLE_SEARCH_ENGINE_ID"),
     q: hint,
     exactTerms: model_file_name,
